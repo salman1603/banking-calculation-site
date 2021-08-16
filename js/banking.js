@@ -16,10 +16,18 @@ function updateTotalField(totalFieldId, amount) {
     const newTotal = previousTotal + amount;
     totalElement.innerText = newTotal;
 }
-function updateBalance(amount, isadd) {
+function getCurrentBalance() {
     const balanceTotal = document.getElementById('balance-total');
     const balanceTotalText = balanceTotal.innerText;
     const previousBalanceTotal = parseFloat(balanceTotalText);
+    return previousBalanceTotal;
+}
+
+function updateBalance(amount, isadd) {
+    const balanceTotal = document.getElementById('balance-total');
+    /* const balanceTotalText = balanceTotal.innerText;
+    const previousBalanceTotal = parseFloat(balanceTotalText); */
+    const previousBalanceTotal = getCurrentBalance();
     // condition applying 
     if (isadd == true) {
         const newBalanceTotal = previousBalanceTotal + amount;
@@ -36,8 +44,11 @@ document.getElementById('deposit-button').addEventListener('click', function () 
 
 
     const depositAmount = getInputValue('deposit-input');
-    updateTotalField('deposit-total', depositAmount);
-    updateBalance(depositAmount, true);
+    if (depositAmount > 0) {
+        updateTotalField('deposit-total', depositAmount);
+        updateBalance(depositAmount, true);
+
+    }
 
 
 
@@ -76,8 +87,15 @@ document.getElementById('withdraw-button').addEventListener('click', function ()
 
 
     const withdrawAmount = getInputValue('withdraw-input');
-    updateTotalField('withdraw-total', withdrawAmount);
-    updateBalance(withdrawAmount, false);
+    const currentBalance = getCurrentBalance();
+    if (withdrawAmount > 0 && withdrawAmount < currentBalance) {
+        updateTotalField('withdraw-total', withdrawAmount);
+        updateBalance(withdrawAmount, false);
+    }
+    if (withdrawAmount > currentBalance) {
+        console.log("you dont have sufficent balance to withdraw the money. ");
+    }
+
 
 
     // const withdrawInput = document.getElementById('withdraw-input');
